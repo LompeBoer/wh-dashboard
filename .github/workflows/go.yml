@@ -1,6 +1,5 @@
 name: build
 
-#on: workflow_dispatch
 on:
   push:
     branches: [ main ]
@@ -25,8 +24,11 @@ jobs:
         node-version: 15
         cache: 'yarn'
 
-    - name: build web
+    - name: install web
       run: yarn install
+      working-directory: ./web
+
+    - name: build web
       run: yarn build
       working-directory: ./web
 
