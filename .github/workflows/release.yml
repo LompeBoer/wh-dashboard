@@ -23,12 +23,16 @@ jobs:
       with:
         node-version: 15
         cache: 'yarn'
+        cache-dependency-path: web/yarn.lock
 
-    - name: build web
+    - name: install web
       run: yarn install
-      run: yarn build
       working-directory: ./web
 
+    - name: build web
+      run: yarn build
+      working-directory: ./web
+      
     - name: build binary
       run: make build
     - name: version

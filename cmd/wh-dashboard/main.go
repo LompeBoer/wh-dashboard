@@ -9,7 +9,7 @@ import (
 	"github.com/LompeBoer/wh-dashboard/web"
 )
 
-const VersionNumber = "0.1-alpha"
+const VersionNumber = "0.1.0-alpha"
 
 func main() {
 	versionFlag := flag.Bool("version", false, "Print the current version and exit")
