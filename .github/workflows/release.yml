@@ -1,0 +1,46 @@
+name: "release"
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build_release:
+    name: build_release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 15
+        cache: 'yarn'
+
+    - name: build web
+      run: yarn install
+      run: yarn build
+      working-directory: ./web
+
+    - name: build binary
+      run: make build
+    - name: version
+      run: echo "::set-output name=version::$(./bin/wh-dashboard --version)"
+      id: version
+    - name: build artifacts
+      run: make build-linux && make build-windows && make build-darwin
+
+    - name: release
+      uses: ncipollo/release-action@v1
+      id: create_release
+      with:
+        artifacts: "bin/wh-dashboard.linux-amd64.tar.gz,bin/wh-dashboard.darwin-amd64.tar.gz,bin/wh-dashboard.windows-amd64.zip"
+        bodyFile: "CHANGELOG.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
